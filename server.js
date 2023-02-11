@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import path from 'path';
 import mainRouter from './routes/root.js';
@@ -6,10 +8,17 @@ import errorHandler from './middleware/errorHandler.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import corsOptions from './config/corsOptions.js';
+import connectDB from './config/db.js';
+import mongoose from 'mongoose';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const __dirname = path.resolve();
+
+console.log(process.env.NODE_ENV);
+
+mongoose.set('strictQuery', false);
+connectDB();
 
 app.use(logger);
 
@@ -37,10 +46,10 @@ app.use(errorHandler);
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT} `));
 
-// mongoose.connection.on('error', (err) => {
-// 	console.log(err);
-// 	logEvents(
-// 		`${err.no}: ${err.code}\t${err.syscall}\t${err.hostname}`,
-// 		'mongoErrLog.log'
-// 	);
-// });
+mongoose.connection.on('error', (err) => {
+	console.log(err);
+	logEvents(
+		`${err.no}: ${err.code}\t${err.syscall}\t${err.hostname}`,
+		'mongoErrLog.log'
+	);
+});
