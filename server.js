@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
 import path from 'path';
-import mainRouter from './routes/root.js';
 import { logger, logEvents } from './middleware/logger.js';
 import errorHandler from './middleware/errorHandler.js';
 import cookieParser from 'cookie-parser';
@@ -10,6 +9,10 @@ import cors from 'cors';
 import corsOptions from './config/corsOptions.js';
 import connectDB from './config/db.js';
 import mongoose from 'mongoose';
+
+import mainRouter from './routes/root.js';
+import authRoutes from './routes/authRoutes.js';
+import usersRoutes from './routes/usersRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -30,6 +33,8 @@ app.use(cookieParser());
 
 app.use('/', express.static(path.join(__dirname, 'public')));
 app.use('/', mainRouter);
+app.use('/auth', authRoutes);
+app.use('/users', usersRoutes);
 
 app.all('*', (req, res) => {
 	res.status(404);
