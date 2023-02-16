@@ -33,6 +33,7 @@ export const login = asyncHandler(async (req, res) => {
 	const accessToken = jwt.sign(
 		{
 			UserInfo: {
+				id: user._id,
 				username: user.username,
 				isAdmin: user.isAdmin,
 			},
@@ -81,8 +82,9 @@ export const refresh = asyncHandler(async (req, res) => {
 			const accessToken = jwt.sign(
 				{
 					UserInfo: {
+						id: user._id,
 						username: user.username,
-						roles: user.isAdmin,
+						isAdmin: user.isAdmin,
 					},
 				},
 				process.env.ACCESS_TOKEN_SECRET,

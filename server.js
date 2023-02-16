@@ -13,6 +13,7 @@ import mongoose from 'mongoose';
 import mainRouter from './routes/root.js';
 import authRoutes from './routes/authRoutes.js';
 import usersRoutes from './routes/usersRoutes.js';
+import trainingRoutes from './routes/trainingRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,7 +26,6 @@ connectDB();
 
 app.use(logger);
 
-// app.use(cors(corsOptions));
 app.use(cors(corsOptions));
 
 app.use(express.json());
@@ -36,6 +36,7 @@ app.use('/', express.static(path.join(__dirname, 'public')));
 app.use('/', mainRouter);
 app.use('/auth', authRoutes);
 app.use('/users', usersRoutes);
+app.use('/training', trainingRoutes);
 
 app.all('*', (req, res) => {
 	res.status(404);
