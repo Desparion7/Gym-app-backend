@@ -15,7 +15,7 @@ export const createNewTraining = asyncHandler(async (req, res, next) => {
 	}
 	// Create new training day
 	const training = new Training({
-		user: req.id,
+		user: req.user,
 		exercise: exercise,
 	});
 
@@ -28,12 +28,43 @@ export const createNewTraining = asyncHandler(async (req, res, next) => {
 //@access Private
 export const getTrainingById = asyncHandler(async (req, res, next) => {
 	// Search for training by ID
-	const training = await Training.findById(req.params.id);
-	if (training) {
-		res.json(training);
-	} else {
+	const training = await Training.findById(req.params.id).exec();
+
+	const id1 = req.user._id;
+	const id2 = training.user;
+
+	if (!training) {
 		return res.status(400).json({
 			error: 'Nie znaleziono treningu o podanym id',
 		});
 	}
+
+	if (id1.equals(id2)) {
+		res.json(training);
+	} else {
+		return res.status(400).json({
+			error: 'Dany plan treningowy przypisany jest do innego użytkownika',
+		});
+	}
+});
+
+//@desc Update training by Id
+//@route PATCH /training:id
+//@access Private
+export const updateTraining = asyncHandler(async (req, res, next) => {
+	const { initialTrainingData } = req.body;
+	
+	// Search for training by ID
+	const training = await Training.findById(req.params.id).exec();
+	if (!training) {
+		return res.status(400).json({
+			error: 'Nie znaleziono treningu o podanym id',
+		});
+	}
+	//Update training
+	await Training.findByIdAndUpdate(req.params.id, { exercise: initialTrainingData }).exec()
+
+
+
+	res.json({ message: `Training został zaaktualizowany` });
 });
