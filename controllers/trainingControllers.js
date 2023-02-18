@@ -6,9 +6,9 @@ import Training from '../models/Training.js';
 //@access Private
 export const createNewTraining = asyncHandler(async (req, res, next) => {
 	// Check for all required data
-	const { newTraining } = req.body.initialTrainingData;
+	const { exercise } = req.body.initialTrainingData;
 
-	if (!newTraining) {
+	if (!exercise) {
 		return res.status(400).json({
 			error: 'Nie wysłano tabeli treningu',
 		});
@@ -16,7 +16,7 @@ export const createNewTraining = asyncHandler(async (req, res, next) => {
 	// Create new training day
 	const training = new Training({
 		user: req.id,
-		exercise: newTraining,
+		exercise: exercise,
 	});
 
 	const createdNewTraining = await training.save();
