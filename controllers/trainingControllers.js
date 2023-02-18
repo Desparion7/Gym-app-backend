@@ -53,7 +53,7 @@ export const getTrainingById = asyncHandler(async (req, res, next) => {
 //@access Private
 export const updateTraining = asyncHandler(async (req, res, next) => {
 	const { initialTrainingData } = req.body;
-	
+
 	// Search for training by ID
 	const training = await Training.findById(req.params.id).exec();
 	if (!training) {
@@ -62,9 +62,11 @@ export const updateTraining = asyncHandler(async (req, res, next) => {
 		});
 	}
 	//Update training
-	await Training.findByIdAndUpdate(req.params.id, { exercise: initialTrainingData }).exec()
+	await Training.findByIdAndUpdate(req.params.id, {
+		exercise: initialTrainingData,
+	}).exec();
 
+	const newTraining = await Training.findById(req.params.id).exec();
 
-
-	res.json({ message: `Training został zaaktualizowany` });
+	res.json(newTraining);
 });
