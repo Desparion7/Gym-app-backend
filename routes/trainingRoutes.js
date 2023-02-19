@@ -5,6 +5,7 @@ import {
 	getUserTrainings,
 	getTrainingById,
 	updateTraining,
+	deleteTraining,
 } from '../controllers/trainingControllers.js';
 
 import { protect } from '../middleware/authMiddleware.js';
@@ -16,6 +17,7 @@ router
 router
 	.route('/:id')
 	.get(protect, getTrainingById)
-	.patch(protect, updateTraining);
+	.patch(protect, updateTraining)
+	.delete(protect, deleteTraining);
 
 export default router;

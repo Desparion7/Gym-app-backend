@@ -28,7 +28,7 @@ export const createNewTraining = asyncHandler(async (req, res, next) => {
 export const getUserTrainings = asyncHandler(async (req, res, next) => {
 	// Search for user trainings
 	const trainings = await Training.find({ user: req.user._id }).exec();
-	
+
 	if (!trainings) {
 		return res.status(400).json({
 			error: 'Nie znaleziono żadnego treningu',
@@ -81,4 +81,22 @@ export const updateTraining = asyncHandler(async (req, res, next) => {
 
 	const newTraining = await Training.findById(req.params.id).exec();
 	res.json(newTraining);
+});
+
+//@desc Update training by Id
+//@route PATCH /training:id
+//@access Private
+export const deleteTraining = asyncHandler(async (req, res, next) => {
+	// Search for training by ID
+	const training = await Training.findById(req.params.id).exec();
+
+	if (!training) {
+		return res.status(400).json({
+			error: 'Nie znaleziono treningu o podanym id',
+		});
+	}
+	//Delete training
+	await training.deleteOne();
+
+	res.json({ message: 'Trening został pomyślnie usunięty' });
 });
