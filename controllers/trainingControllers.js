@@ -6,8 +6,8 @@ import Training from '../models/Training.js';
 //@access Private
 export const createNewTraining = asyncHandler(async (req, res, next) => {
 	// Check for all required data
-	const { exercise } = req.body.initialTrainingData;
-
+	const exercise = req.body.emptyTraining;
+	console.log(req.body);
 	if (!exercise) {
 		return res.status(400).json({
 			error: 'Nie wysłano tabeli treningu',
@@ -21,6 +21,20 @@ export const createNewTraining = asyncHandler(async (req, res, next) => {
 
 	const createdNewTraining = await training.save();
 	res.status(201).json(createdNewTraining);
+});
+
+//@desc Get users all trainings
+//@route GET /training
+//@access Private
+export const getUserTrainings = asyncHandler(async (req, res, next) => {
+	// Search for user trainings
+	const trainings = await Training.find(req.user._id).exec();
+	if (!trainings) {
+		return res.status(400).json({
+			error: 'Nie znaleziono żadnego treningu',
+		});
+	}
+	res.json(trainings);
 });
 
 //@desc Get training by Id
@@ -52,8 +66,7 @@ export const getTrainingById = asyncHandler(async (req, res, next) => {
 //@route PATCH /training:id
 //@access Private
 export const updateTraining = asyncHandler(async (req, res, next) => {
-	const { initialTrainingData } = req.body;
-
+	const { exercise } = req.body;
 	// Search for training by ID
 	const training = await Training.findById(req.params.id).exec();
 	if (!training) {
@@ -63,10 +76,9 @@ export const updateTraining = asyncHandler(async (req, res, next) => {
 	}
 	//Update training
 	await Training.findByIdAndUpdate(req.params.id, {
-		exercise: initialTrainingData,
+		exercise: exercise,
 	}).exec();
 
 	const newTraining = await Training.findById(req.params.id).exec();
-
 	res.json(newTraining);
 });
