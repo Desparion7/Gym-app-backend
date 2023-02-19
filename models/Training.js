@@ -7,7 +7,7 @@ const exerciseSchema = mongoose.Schema({
 	weight: { type: Number, required: false },
 });
 
-const trainingSchema =  mongoose.Schema({
+const trainingSchema = mongoose.Schema({
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
 		required: true,
@@ -19,6 +19,10 @@ const trainingSchema =  mongoose.Schema({
 				type: [exerciseSchema],
 			},
 		],
+		required: true,
+	},
+	trainingDate: {
+		type: Date,
 		required: true,
 	},
 });

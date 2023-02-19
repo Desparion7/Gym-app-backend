@@ -6,7 +6,8 @@ import Training from '../models/Training.js';
 //@access Private
 export const createNewTraining = asyncHandler(async (req, res, next) => {
 	// Check for all required data
-	const exercise = req.body.emptyTraining;
+	const exercise = req.body.exercise;
+	const trainingDate = req.body.trainingDate;
 	if (!exercise) {
 		return res.status(400).json({
 			error: 'Nie wysłano tabeli treningu',
@@ -16,6 +17,7 @@ export const createNewTraining = asyncHandler(async (req, res, next) => {
 	const training = new Training({
 		user: req.user,
 		exercise: exercise,
+		trainingDate: trainingDate,
 	});
 
 	const createdNewTraining = await training.save();
@@ -66,7 +68,8 @@ export const getTrainingById = asyncHandler(async (req, res, next) => {
 //@route PATCH /training:id
 //@access Private
 export const updateTraining = asyncHandler(async (req, res, next) => {
-	const { exercise } = req.body;
+	const { exercise, trainingDate } = req.body;
+
 	// Search for training by ID
 	const training = await Training.findById(req.params.id).exec();
 	if (!training) {
@@ -74,13 +77,19 @@ export const updateTraining = asyncHandler(async (req, res, next) => {
 			error: 'Nie znaleziono treningu o podanym id',
 		});
 	}
-	//Update training
-	await Training.findByIdAndUpdate(req.params.id, {
-		exercise: exercise,
-	}).exec();
+	//Update training exercise
+	if (exercise) {
+		await Training.findByIdAndUpdate(req.params.id, {
+			exercise: exercise,
+		}).exec();
+	}
+	if (trainingDate) {
+		await Training.findByIdAndUpdate(req.params.id, {
+			trainingDate: trainingDate,
+		}).exec();
+	}
 
-	const newTraining = await Training.findById(req.params.id).exec();
-	res.json(newTraining);
+	res.json({ message: 'Trening został zaaktualizowany' });
 });
 
 //@desc Update training by Id
