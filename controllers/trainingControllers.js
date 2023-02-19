@@ -7,7 +7,6 @@ import Training from '../models/Training.js';
 export const createNewTraining = asyncHandler(async (req, res, next) => {
 	// Check for all required data
 	const exercise = req.body.emptyTraining;
-	console.log(req.body);
 	if (!exercise) {
 		return res.status(400).json({
 			error: 'Nie wysłano tabeli treningu',
@@ -28,7 +27,8 @@ export const createNewTraining = asyncHandler(async (req, res, next) => {
 //@access Private
 export const getUserTrainings = asyncHandler(async (req, res, next) => {
 	// Search for user trainings
-	const trainings = await Training.find(req.user._id).exec();
+	const trainings = await Training.find({ user: req.user._id }).exec();
+	
 	if (!trainings) {
 		return res.status(400).json({
 			error: 'Nie znaleziono żadnego treningu',
