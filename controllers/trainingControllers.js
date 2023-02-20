@@ -8,6 +8,7 @@ export const createNewTraining = asyncHandler(async (req, res, next) => {
 	// Check for all required data
 	const exercise = req.body.exercise;
 	const trainingDate = req.body.trainingDate;
+	const trainingName = req.body.trainingName;
 	if (!exercise) {
 		return res.status(400).json({
 			error: 'Nie wysłano tabeli treningu',
@@ -16,8 +17,9 @@ export const createNewTraining = asyncHandler(async (req, res, next) => {
 	// Create new training day
 	const training = new Training({
 		user: req.user,
-		exercise: exercise,
-		trainingDate: trainingDate,
+		exercise,
+		trainingDate,
+		trainingName,
 	});
 
 	const createdNewTraining = await training.save();
@@ -36,6 +38,8 @@ export const getUserTrainings = asyncHandler(async (req, res, next) => {
 			error: 'Nie znaleziono żadnego treningu',
 		});
 	}
+	trainings.sort((a, b) => new Date(b.trainingDate) - new Date(a.trainingDate));
+
 	res.json(trainings);
 });
 
@@ -68,7 +72,7 @@ export const getTrainingById = asyncHandler(async (req, res, next) => {
 //@route PATCH /training:id
 //@access Private
 export const updateTraining = asyncHandler(async (req, res, next) => {
-	const { exercise, trainingDate } = req.body;
+	const { exercise, trainingDate, trainingName, timeStart, timeEnd } = req.body;
 
 	// Search for training by ID
 	const training = await Training.findById(req.params.id).exec();
@@ -80,15 +84,39 @@ export const updateTraining = asyncHandler(async (req, res, next) => {
 	//Update training exercise
 	if (exercise) {
 		await Training.findByIdAndUpdate(req.params.id, {
-			exercise: exercise,
+			exercise,
 		}).exec();
 	}
 	if (trainingDate) {
 		await Training.findByIdAndUpdate(req.params.id, {
-			trainingDate: trainingDate,
+			trainingDate,
 		}).exec();
 	}
-
+	if (trainingName) {
+		await Training.findByIdAndUpdate(req.params.id, {
+			trainingName,
+		}).exec();
+	}
+	if (timeStart) {
+		await Training.findByIdAndUpdate(req.params.id, {
+			timeStart,
+		}).exec();
+	}
+	if (timeEnd) {
+		await Training.findByIdAndUpdate(req.params.id, {
+			timeEnd,
+		}).exec();
+	}
+	if (timeStart && timeEnd) {
+		const [hours1, minutes1] = timeStart.split(':');
+		const [hours2, minutes2] = timeEnd.split(':');
+		const totalMinutes1 = hours1 * 60 + parseInt(minutes1);
+		const totalMinutes2 = hours2 * 60 + parseInt(minutes2);
+		const traininglength = totalMinutes2 - totalMinutes1;
+		await Training.findByIdAndUpdate(req.params.id, {
+			traininglength,
+		}).exec();
+	}
 	res.json({ message: 'Trening został zaaktualizowany' });
 });
 

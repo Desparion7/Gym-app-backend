@@ -21,9 +21,25 @@ const trainingSchema = mongoose.Schema({
 		],
 		required: true,
 	},
+	trainingName: {
+		type: String,
+		require: true,
+	},
 	trainingDate: {
 		type: Date,
 		required: true,
+	},
+	timeStart: {
+		type: String,
+		required: false,
+	},
+	timeEnd: {
+		type: String,
+		required: false,
+	},
+	traininglength: {
+		type: String,
+		required: false,
 	},
 });
 
