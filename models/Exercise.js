@@ -4,6 +4,8 @@ const exerciseSchema = mongoose.Schema({
 	exerciseName: { type: String, required: true },
 	imgPath: { type: String, required: true },
 	url: { type: String, required: true },
+	muscle1: [],
+	muscle2: [],
 	videoUrl: [],
 });
 

@@ -8,12 +8,7 @@ const exerciseSchema = mongoose.Schema({
 	url: { type: String, require: false },
 });
 
-const trainingSchema = mongoose.Schema({
-	user: {
-		type: mongoose.Schema.Types.ObjectId,
-		required: true,
-		ref: 'User',
-	},
+const exampleTrainingSchema = mongoose.Schema({
 	exercise: {
 		type: [
 			{
@@ -26,24 +21,15 @@ const trainingSchema = mongoose.Schema({
 		type: String,
 		require: true,
 	},
-	trainingDate: {
-		type: Date,
-		required: true,
-	},
-	timeStart: {
+	path: {
 		type: String,
-		required: false,
-	},
-	timeEnd: {
-		type: String,
-		required: false,
-	},
-	traininglength: {
-		type: String,
-		required: false,
+		require: false,
 	},
 });
 
-const Training = mongoose.model('Training', trainingSchema);
+const ExampleTraining = mongoose.model(
+	'ExampleTraining',
+	exampleTrainingSchema
+);
 
-export default Training;
+export default ExampleTraining;
