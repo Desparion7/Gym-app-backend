@@ -242,6 +242,7 @@ const exercises = [
 		exerciseName: 'Izometryczny skurcz mięśni brzucha. Deska/ścianka/plank',
 		imgPath: '../../img/photo/exercise/belly-2.PNG',
 		url: 'plank',
+		time:true,
 		muscle1: [
 			'prosty brzucha',
 			'skośne brzucha',
