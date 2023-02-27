@@ -14,6 +14,7 @@ import mainRouter from './routes/root.js';
 import authRoutes from './routes/authRoutes.js';
 import usersRoutes from './routes/usersRoutes.js';
 import trainingRoutes from './routes/trainingRoutes.js';
+import trainingSetRoutes from './routes/trainingSetRoutes.js';
 import exercisesRoutes from './routes/exercisesRoutes.js';
 import exampleTrainingRoutes from './routes/exampleTrainingRoutes.js';
 
@@ -39,6 +40,7 @@ app.use('/', mainRouter);
 app.use('/auth', authRoutes);
 app.use('/users', usersRoutes);
 app.use('/training', trainingRoutes);
+app.use('/set', trainingSetRoutes);
 app.use('/exercise', exercisesRoutes);
 app.use('/exampletraining', exampleTrainingRoutes);
 
