@@ -46,6 +46,58 @@ export const getUserTrainingSets = asyncHandler(async (req, res, next) => {
 	res.json(trainingSets);
 });
 
+//@desc Get users set by Id
+//@route GET /set/:id
+//@access Private
+export const getTrainingSetById = asyncHandler(async (req, res, next) => {
+	const trainingSet = await TrainingSet.findById(req.params.id).exec();
+
+	const id1 = req.user._id;
+	const id2 = trainingSet.user;
+
+	if (!trainingSet) {
+		return res.status(400).json({
+			error: 'Nie znaleziono zestwu o podanym id',
+		});
+	}
+	if (id1.equals(id2)) {
+		res.json(trainingSet);
+	} else {
+		return res.status(400).json({
+			error: 'Dany plan treningowy przypisany jest do innego użytkownika',
+		});
+	}
+});
+
+//@desc Update training set by Id
+//@route PATCH /set:id
+//@access Private
+export const updateTrainingSet = asyncHandler(async (req, res, next) => {
+	const { exercise, trainingName } = req.body;
+	
+
+	// Search for training by ID
+	const trainingSet = await TrainingSet.findById(req.params.id).exec();
+	if (!trainingSet) {
+		return res.status(400).json({
+			error: 'Nie znaleziono zestwu o podanym id',
+		});
+	}
+	//Update training exercise and name
+	if (exercise) {
+		await TrainingSet.findByIdAndUpdate(req.params.id, {
+			exercise,
+		}).exec();
+	}
+	if (trainingName) {
+		await TrainingSet.findByIdAndUpdate(req.params.id, {
+			trainingName,
+		}).exec();
+	}
+
+	res.json({ message: 'Trening został zaaktualizowany' });
+});
+
 //@desc Delete set
 //@route Delete /set/:id
 //@access Private
