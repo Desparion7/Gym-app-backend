@@ -30,17 +30,29 @@ export const createNewTraining = asyncHandler(async (req, res, next) => {
 //@route GET /training
 //@access Private
 export const getUserTrainings = asyncHandler(async (req, res, next) => {
-	// Search for user trainings
-	const trainings = await Training.find({ user: req.user._id }).exec();
+	const pageSize = 10;
+	const page = Number(req.query._page) || 1;
+	console.log(req.query._page);
 
-	if (!trainings) {
+	// Search for user trainings
+	const trainingsList = await Training.find({ user: req.user._id });
+
+	if (!trainingsList) {
 		return res.status(400).json({
 			error: 'Nie znaleziono żadnego treningu',
 		});
 	}
-	trainings.sort((a, b) => new Date(b.trainingDate) - new Date(a.trainingDate));
+	const count = await Training.countDocuments({ user: req.user._id });
 
-	res.json(trainings);
+	trainingsList.sort(
+		(a, b) => new Date(b.trainingDate) - new Date(a.trainingDate)
+	);
+	const trainings = trainingsList.slice(
+		(page - 1) * 10,
+		(page - 1) * 10 + pageSize
+	);
+
+	res.json({ trainings, page, pages: Math.ceil(count / pageSize) });
 });
 
 //@desc Get training by Id
