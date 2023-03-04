@@ -17,6 +17,7 @@ import trainingRoutes from './routes/trainingRoutes.js';
 import trainingSetRoutes from './routes/trainingSetRoutes.js';
 import exercisesRoutes from './routes/exercisesRoutes.js';
 import exampleTrainingRoutes from './routes/exampleTrainingRoutes.js';
+import recordsRoutes from './routes/recordsRoutes.js'
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -43,6 +44,7 @@ app.use('/training', trainingRoutes);
 app.use('/set', trainingSetRoutes);
 app.use('/exercise', exercisesRoutes);
 app.use('/exampletraining', exampleTrainingRoutes);
+app.use('/records', recordsRoutes);
 
 app.all('*', (req, res) => {
 	res.status(404);

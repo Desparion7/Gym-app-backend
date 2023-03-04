@@ -32,8 +32,6 @@ export const createNewTraining = asyncHandler(async (req, res, next) => {
 export const getUserTrainings = asyncHandler(async (req, res, next) => {
 	const pageSize = 10;
 	const page = Number(req.query._page) || 1;
-	console.log(req.query._page);
-
 	// Search for user trainings
 	const trainingsList = await Training.find({ user: req.user._id });
 

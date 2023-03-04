@@ -1,4 +1,5 @@
 import User from '../models/User.js';
+import Records from '../models/Records.js';
 import bcrypt from 'bcrypt';
 import validator from 'validator';
 import asyncHandler from 'express-async-handler';
@@ -58,6 +59,8 @@ export const createNewUser = asyncHandler(async (req, res, next) => {
 	};
 	// Save the new user to the database
 	const user = await User.create(newUser);
+	// Create default records for new user
+	const records = await Records.create({user});
 
 	if (user) {
 		res.status(201).json({
