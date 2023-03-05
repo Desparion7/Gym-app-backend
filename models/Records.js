@@ -11,15 +11,35 @@ const recordSchema = mongoose.Schema({
 	},
 });
 const initialRecords = [
-	{ recordName: 'Maksymalna ilość pompek', recordAmount: '0' },
+	{ recordName: 'Maksymalna ilość pompek', recordAmount: '0 razy' },
 	{
 		recordName: 'Maksymalna ilość podciągnieć na drążku nachwytem',
-		recordAmount: '0',
+		recordAmount: '0 razy',
 	},
-	{ recordName: 'Plank', recordAmount: '0' },
+	{ recordName: 'Plank', recordAmount: '0 min' },
 	{
 		recordName: 'Maksymalny ciężar-wyciskanie na klatke',
-		recordAmount: '0',
+		recordAmount: '0 kg',
+	},
+	{
+		recordName: 'Maksymalny ciężar na martwym ciągu',
+		recordAmount: '0 kg',
+	},
+	{
+		recordName: 'Czas wiszenia na drążku',
+		recordAmount: '0 min',
+	},
+	{
+		recordName: 'Czas na 100m',
+		recordAmount: '0 min',
+	},
+	{
+		recordName: 'Czas półmaratonu',
+		recordAmount: '0 h',
+	},
+	{
+		recordName: 'Czas maratonu',
+		recordAmount: '0 h',
 	},
 ];
 
