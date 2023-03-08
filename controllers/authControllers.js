@@ -2,33 +2,59 @@ import User from '../models/User.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import asyncHandler from 'express-async-handler';
+import { OAuth2Client } from 'google-auth-library';
+
+const client = new OAuth2Client(process.env.CLIENT_ID);
 
 //@desc Login
 //@route POST /auth
 //@access Public
 export const login = asyncHandler(async (req, res) => {
-	const { email, username, password } = req.body;
-	// Check for all required data
-	if ((!username && !email) || !password) {
-		return res
-			.status(400)
-			.json({ message: 'Login(email) i hasło są wymagane' });
-	}
-	// Check with date user use to login
+	const { email, username, password, credential } = req.body;
 	let user;
-	if (email) {
-		user = await User.findOne({ email });
+
+	if (credential) {
+		// decoding credential Google
+		const ticket = await client.verifyIdToken({
+			idToken: credential,
+			audience: process.env.CLIENT_ID,
+		});
+		const payload = ticket.getPayload();
+		const googleEmail = payload.email;
+		const googleName = payload.given_name;
+
+		user = await User.findOne({ email: googleEmail });
+		if (!user) {
+			// createing new user if no exist
+			const newUser = {
+				username: googleName,
+				email: googleEmail,
+			};
+			user = await User.create(newUser);
+		}
 	} else {
-		user = await User.findOne({ username });
+		// Check for all required data
+		if ((!username && !email) || !password) {
+			return res
+				.status(400)
+				.json({ message: 'Login(email) i hasło są wymagane' });
+		}
+		// Check with date user use to login
+		if (email) {
+			user = await User.findOne({ email });
+		} else {
+			user = await User.findOne({ username });
+		}
+		if (!user) {
+			return res.status(401).json({ message: 'Nieprawidłowy login lub hasło' });
+		}
+		// CHeck password
+		const match = await bcrypt.compare(password, user.password);
+		if (!match) {
+			return res.status(401).json({ message: 'Brak autoryzacji' });
+		}
 	}
-	if (!user) {
-		return res.status(401).json({ message: 'Nieprawidłowy login lub hasło' });
-	}
-	// CHeck password
-	const match = await bcrypt.compare(password, user.password);
-	if (!match) {
-		return res.status(401).json({ message: 'Brak autoryzacji' });
-	}
+
 	// Generate acces and refresh token
 	const accessToken = jwt.sign(
 		{

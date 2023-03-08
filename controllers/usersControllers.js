@@ -79,15 +79,16 @@ export const createNewUser = asyncHandler(async (req, res, next) => {
 export const updateUser = asyncHandler(async (req, res, next) => {
 	const { newPassword, newEmail, password } = req.body;
 	const user = await User.findOne(req.user);
-
-	// Compare old password
-	const match = await bcrypt.compare(password, user.password);
-
-	if (!match) {
-		return res.status(400).json({
-			message: 'Brak autoryzacji, niepoprawne hasło.',
-		});
+	if (password !== '') {
+		// Compare old password
+		const match = await bcrypt.compare(password, user.password);
+		if (!match) {
+			return res.status(400).json({
+				message: 'Brak autoryzacji, niepoprawne hasło.',
+			});
+		}
 	}
+
 	// Check for neede data
 	if (!newPassword && !newEmail) {
 		return res.status(400).json({

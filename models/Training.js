@@ -6,6 +6,7 @@ const exerciseSchema = mongoose.Schema({
 	time: { type: Boolean, required: false },
 	weight: { type: Number, required: false },
 	url: { type: String, require: false },
+	check: { type: Boolean, require: false, default: false },
 });
 
 const trainingSchema = mongoose.Schema({
